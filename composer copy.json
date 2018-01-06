@@ -1,0 +1,20 @@
+{
+    "name": "joswide/berry-forms",
+    "description": "Forms Manager for PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jose",
+            "email": "hola@joswide.com"
+        }
+    ],
+    "require": {
+	    "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Joswide\\BerryForms\\": "src"
+        }
+    }
+}
