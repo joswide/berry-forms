@@ -13,6 +13,7 @@ class Form{
 	public $method = 'post'; // get, post
 	
 	public $fields = [];
+	public $field = null;
 	
 	
 	public function __construct($params = null){
@@ -22,7 +23,7 @@ class Form{
 		$this->userInput = new UserInput($this->getMethod());
 		
 		$this->fields = new Fields();
-		
+		$this->field = new FieldGetter($this);
 		
 	}
 	
@@ -33,6 +34,27 @@ class Form{
 	
 	public function readInput(){
 		
+		//foreach($this->getFields() as $field){
+		foreach($this->getFields()->getItems() as $field){
+			$fieldName = $field->getName();
+			
+			$value = $this->userInput->getVarValue($fieldName);
+			
+			$field->setUserValue($value);
+			
+			// Valida regla
+			
+			$isValid = $field->validateRules($value);
+			
+			//jgdebug($isValid);
+			
+			
+			//echo $fieldName . ":" . $value; echo "<br>";
+			
+		}
+		
+		
+		//echo "+++++++++++++";
 	}
 	
 	public function addField($field){
@@ -48,7 +70,7 @@ class Form{
 	}
 	
 	public function getFields(){
-		
+		return $this->fields;
 	}
 	
 	public function isSubmitted(){
@@ -56,11 +78,32 @@ class Form{
 	}
 	public function isSuccess(){
 		
+		$this->readInput();
+		
+		
+		
+		
 	}
 	public function isError(){
 		
 	}
 	public function getErrors(){
+		
+	}
+	
+	/**
+	 *	Return user values
+	 *
+	 */
+	public function getValues(){
+		
+	}
+	
+	/**
+	 *	Return user value
+	 *
+	 */
+	public function getUserValue($name){
 		
 	}
 	
@@ -75,6 +118,8 @@ class Form{
 		
 		// post by default
 		$this->method = 'post';
+		
+		return $this;
 	}
 	
 	// getters

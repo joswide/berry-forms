@@ -30,6 +30,7 @@ class UserInput{
 			return true;
 		}
 		
+		// $_POST by default
 		$this->vars = $_POST;
 		
 		return true;

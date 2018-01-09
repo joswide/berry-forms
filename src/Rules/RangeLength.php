@@ -15,7 +15,19 @@ class RangeLength extends \BerryForms\Rule implements \BerryForms\RuleInterface{
 	
 	public function validate($value){
 		
+		if (!is_string($value))
+		{
+			return false;
+		}
+		// get the string length
 		$length = mb_strlen($value);
+		
+		if (!(($length <= $this->maxLength) && ($length >= $this->minLength))){
+			
+			$message = "La longitud debe ser superior a $this->minLength e inferior a $this->maxLength";
+			
+			return new \BerryForms\UserInputError($message);
+		}
 		
 		return (($length <= $this->maxLength) && ($length >= $this->minLength));
 	}

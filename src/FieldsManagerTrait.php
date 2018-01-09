@@ -7,6 +7,8 @@ trait FieldsManagerTrait{
 	public function addSelect($name, $label, $options){
 		$field = new Fields\Select($name, $label, $options);
 		
+		$field->addRule(new Rules\SelectValidOption($options));
+		
 		$this->addField($field);
 		
 		return $field;
@@ -21,6 +23,14 @@ trait FieldsManagerTrait{
 	}
 	
 	public function addText($name, $label){
+		
+		$field = new Fields\Text($name, $label);
+		$this->addField($field);
+		
+		return $field;
+	}
+	
+	public function addPassword($name, $label){
 		
 		$field = new Fields\Text($name, $label);
 		$this->addField($field);

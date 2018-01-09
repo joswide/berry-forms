@@ -43,6 +43,11 @@ class Fields implements \Iterator{
 		return false;
 	}
 	
+	
+	public function getItems(){
+		return $this->list;
+	}
+	
 	/**
 	 *	Search a field by name
 	 *
@@ -93,7 +98,7 @@ class Fields implements \Iterator{
 	public function rewind(){
 		$this->position = 0;
 	}
-	public function valid() : boolean{
+	public function valid(){
 		return isset($this->list[$this->position]);
 	}
 	

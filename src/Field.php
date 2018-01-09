@@ -17,7 +17,11 @@ class Field{
 	public $defaultValue = null;
 	public $placeholder = '';
 	
+	public $userValue = null;
+	
 	public $rules = [];
+	
+	public $errors = [];
 	
 	public function __construct($name, $label){
 		
@@ -37,39 +41,67 @@ class Field{
 		$this->label = $label;
 		return $this;
 	}
-	public function setIsRequired($isRequired){
-		$this->required = (bool) $isRequired;
-		return $this;
-	}
 	public function setHint($hint){
 		$this->hint = $hint;
 		return $this;
 	}
 	
-	/* getter */
+	public function setIsRequired(){
+		$this->required = true;
+		return $this;
+	}
+	public function setIsNotRequired(){
+		$this->required = false;
+		return $this;
+	}
+	public function setDefaultValue($defaultValue){
+		$this->defaultValue = $defaultValue;
+		return $this;
+	}
+	public function setPlaceholder($placeholder){
+		$this->placeholder = $placeholder;
+		return $this;
+	}
+	
+	public function setUserValue($userValue){
+		$this->userValue = $userValue;
+		return $this;
+	}
+	
+	/* getters */
 	public function getName(){
 		return $this->name;
 	}
 	public function getLabel(){
 		return $this->label;
 	}
-	public function getIsRequired(){
-		return $this->required;
-	}
 	public function getHint(){
 		return $this->hint;
 	}
+	public function getIsRequired(){
+		return $this->required;
+	}
+	public function getDefaultValue(){
+		return $this->defaultValue;
+	}
+	public function getPlaceholder(){
+		return $this->placeholder;
+	}
 	
 	public function getUserValue(){
-		
+		return $this->userValue;	
 	}
 	
-	public function setUserValue(){
-		
-	}
+
 	
-	public function addRule($rule){
+	public function addRule($rule, $message = null){
+		
 		if ($rule instanceof Rule){
+			
+			if ($message){
+				$rule->setErrorMessage($message);
+			}
+			
 			$this->rules[] = $rule;
 		}
 		
@@ -77,11 +109,47 @@ class Field{
 
 	}
 	
-	public function addRules($rule, $message){
-
+	public function addRules($rule, $message){}
+	
+	public function getRules(){
+		return $this->rules;
 	}
-	public function validateRules(){
+	
+	public function validateRules($value){
 		
+		$isRequired = $this->getIsRequired();
+		
+		if (!$isRequired && is_null($value)){
+			$this->errors = [];
+			return (0 == count($this->errors));
+		}
+		
+	
+		
+		if ($isRequired && is_null($value)){
+			$this->errors = [];
+			$this->errors[] = new UserInputError('El campo es obligatorio');
+			
+			return (0 == count($this->errors));
+		}
+		
+		$errors = [];
+		
+		foreach($this->getRules() as $rule){
+			//$validation = $rule->validate($value);
+			
+			$validation = $rule->getValidation($value);
+			
+			if ($validation instanceof UserInputError){
+				$errors[] = $validation;
+			}
+		}
+		
+		$this->errors = $errors;
+		
+		return (0 == count($errors));
+		
+		return true;
 	}
 	
 	
@@ -109,7 +177,16 @@ class Field{
 		return $this;
 	}
 	
-	
+	public function setIsRegex($value, $message = null){
+		$this->addRule(new \BerryForms\Rules\Regex($value), $message);
+		
+		return $this;
+	}
+	public function setIsUsername($message = null){
+		$this->addRule(new \BerryForms\Rules\Username(), $message);
+		
+		return $this;
+	}
 	
 	
 	/* values min|max|ranges */
