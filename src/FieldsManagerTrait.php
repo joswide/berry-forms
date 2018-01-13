@@ -30,9 +30,17 @@ trait FieldsManagerTrait{
 		return $field;
 	}
 	
+	public function addHidden($name, $label){
+		
+		$field = new Fields\Hidden($name, $label);
+		$this->addField($field);
+		
+		return $field;
+	}
+	
 	public function addPassword($name, $label){
 		
-		$field = new Fields\Text($name, $label);
+		$field = new Fields\Password($name, $label);
 		$this->addField($field);
 		
 		return $field;

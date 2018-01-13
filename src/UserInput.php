@@ -54,6 +54,9 @@ class UserInput{
 	}
 	
 
+	public function getCountVars(){
+		return count($this->vars);
+	}
 	
 	
 
